@@ -1,3 +1,29 @@
+// const MongoClient = require('mongodb').MongoClient;
+// const assert = require('assert');
+
+// const url = 'mongodb://localhost';
+
+// const dbName = 'qna';
+// const client = new MongoClient(url);
+
+// // client.connect(function(err) {
+// //   assert.equal(null, err);
+// //   console.log('Connected successfully to server');
+
+// //   const db = client.db(dbName);
+
+// //   let collection = db.collection('questions_answers_aggregated');
+
+// //   collection.find({product_id: 17071}).toArray(function(err, docs) {
+// //     assert.equal(err, null);
+// //     console.log('Found the following records');
+// //     console.log(docs);
+
+// //   })
+// // })
+
+// module.exports = client;
+
 const mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/qna', {useNewUrlParser: true, useUnifiedTopology: true});
 mongoose.connection.on('Error connecting to MongoDB', console.error.bind(console, 'connection error'));
@@ -6,50 +32,61 @@ mongoose.connection.once('open', function() {
 })
 
 let photoSchema = mongoose.Schema({
+  id: Number,
+  answer_id: Number,
   url: String
 })
 
 let Photo = mongoose.model('Photo', photoSchema);
 
 let answerSchema = mongoose.Schema({
+  id: Number,
+  question_id: Number,
   body: String,
-  date: Date,
-  name: String,
-  email: String,
-  helpfulness: Number,
+  date_written: Date,
+  answerer_name: String,
+  answerer_email: String,
+  helpful: Number,
   reported: Boolean,
   photos: [photoSchema]
 })
 
-let Answer = mongoose.model('Answer', answerSchema);
+let Answer = mongoose.model('Answer', answerSchema, 'answer_photos_aggregated');
 
 let questionSchema = mongoose.Schema({
+  id: Number,
+  product_id: Number,
   body: String,
-  date: Date,
-  name: String,
-  email: String,
-  helpfulness: Number,
+  date_written: Date,
+  asker_name: String,
+  asker_email: String,
+  helpful: Number,
   reported: Boolean,
   answers: [answerSchema]
 })
 
-let Question = mongoose.model('Question', questionSchema);
+let Question = mongoose.model('Question', questionSchema, 'questions_answers_aggregated');
 
-let productSchema = mongoose.Schema({
-  product_id: Number,
-  questions: [questionSchema]
-});
+module.exports.Question = Question;
+module.exports.Answer = Answer;
+module.exports.Photo = Photo;
 
-let Product = mongoose.model('Product', productSchema);
+// let productSchema = mongoose.Schema({
+//   product_id: Number,
+//   questions: [questionSchema]
+// });
 
-let testPhoto = new Photo({url: 'doesntmatter'});
-let testAnswer = new Answer({body: 'test', name: 'test', email: 'test@test.com', helpfulness: 0, reported: false})
-let testQuestion = new Question({body: 'test', name: 'test', email: 'test@test.com', helpfulness: 0, reported: false})
-let testProduct = new Product({product_id: '42069'});
+// let Product = mongoose.model('Product', productSchema);
 
-testAnswer.photos.push(testPhoto);
-testQuestion.answers.push(testAnswer);
-testProduct.questions.push(testQuestion);
+// let testPhoto = new Photo({url: 'doesntmatter'});
+// let testAnswer = new Answer({body: 'test', name: 'test', email: 'test@test.com', helpfulness: 0, reported: false})
+// let testQuestion = new Question({body: 'test', name: 'test', email: 'test@test.com', helpfulness: 0, reported: false})
+// let testProduct = new Product({product_id: '42069'});
+
+// testAnswer.photos.push(testPhoto);
+// testQuestion.answers.push(testAnswer);
+// testProduct.questions.push(testQuestion);
+
 // testProduct.save();
 
 
