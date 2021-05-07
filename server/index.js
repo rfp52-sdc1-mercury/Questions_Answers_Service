@@ -39,17 +39,39 @@ app.get('/qa/questions', function(req, res) {
 
 });
 
-app.get('/qa/questions/:question_id/answers', function(req, res) {
-  console.log(req.params.question_id);
+app.post('/qa/questions', function(req, res) {
+  var {body, name, email, product_id} = req.body
+  console.log(body, name, email, product_id);
+
+  if (product_id == undefined) {
+    res.sendStatus(400);
+  }
   // res.end();
-  db.Question.find({id: req.params.question_id})
+  db.Question.create({body: body, asker_name: name, asker_email: email, product_id: product_id, date_written: new Date(), helpful: 0, reported: false})
   .then((results) => {
     console.log(results);
     res.json(results);
   })
   .catch((err) => {
     console.error(err);
-    res.sendStatus(404);
+    res.sendStatus(400);
+  })
+});
+
+app.put('/qa/questions/:question_id/helpful', function(req, res) {
+  var {question_id} = req.params;
+  console.log(question_id);
+
+
+  // res.sendStatus(204);
+  db.Question.updateOne({id: question_id}, {$inc: {helpful: 1}})
+  .then((results) => {
+    console.log(results);
+    res.json(results);
+  })
+  .catch((err) => {
+    console.error(err);
+    res.sendStatus(400);
   })
 });
 

@@ -55,7 +55,7 @@ let Answer = mongoose.model('Answer', answerSchema, 'answer_photos_aggregated');
 
 let questionSchema = mongoose.Schema({
   id: Number,
-  product_id: Number,
+  product_id: {type: Number, required: true},
   body: String,
   date_written: Date,
   asker_name: String,
