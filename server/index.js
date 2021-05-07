@@ -29,17 +29,28 @@ app.get('/qa/questions', function(req, res) {
   // console.log(req.query.product_id, req.query.page, req.query.count);
   db.Question.find({product_id: req.query.product_id})
   .then((results) => {
-    console.log(results);
+    // console.log(results);
     res.json(results);
   })
   .catch((err) => {
     console.error(err);
+    res.sendStatus(404);
   })
 
 });
 
 app.get('/qa/questions/:question_id/answers', function(req, res) {
-
+  console.log(req.params.question_id);
+  // res.end();
+  db.Question.find({id: req.params.question_id})
+  .then((results) => {
+    console.log(results);
+    res.json(results);
+  })
+  .catch((err) => {
+    console.error(err);
+    res.sendStatus(404);
+  })
 });
 
 let port = 3000;
