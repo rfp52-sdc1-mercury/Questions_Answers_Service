@@ -51,7 +51,7 @@ let answerSchema = mongoose.Schema({
   photos: [photoSchema]
 })
 
-let Answer = mongoose.model('Answer', answerSchema, 'answer_photos_aggregated');
+let Answer = mongoose.model('Answer', answerSchema);
 
 let questionSchema = mongoose.Schema({
   id: Number,

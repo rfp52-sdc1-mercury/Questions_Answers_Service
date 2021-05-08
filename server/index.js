@@ -1,6 +1,7 @@
 const express = require('express');
 const db = require('../database');
 let app = express();
+const path = require('path');
 
 const assert = require('assert');
 const dbName = 'qna';
@@ -21,7 +22,7 @@ const dbName = 'qna';
 //   })
 // })
 
-// app.use(express.static('FILEPATHGOESHERE'));
+app.use(express.static(__dirname + '/../../Project-Catwalk-1/client/dist'));
 app.use(express.json());
 
 app.get('/qa/questions', function(req, res) {
