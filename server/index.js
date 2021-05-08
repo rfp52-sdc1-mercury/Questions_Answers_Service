@@ -82,6 +82,9 @@ app.post('/qa/questions/:question_id/answers', function(req, res) {
   .then((results) => {
     // console.log(results);
     // res.json(results.answers);
+    if (results == null) {
+      throw error;
+    }
 
     // Create our new answer
 
@@ -98,10 +101,10 @@ app.post('/qa/questions/:question_id/answers', function(req, res) {
       results.save();
       res.json(results);
       })
-      .catch((err) => {
-        console.error(err);
-        res.sendStatus(400);
-      })
+    })
+    .catch((err) => {
+      console.error(err);
+      res.sendStatus(400);
     })
 
   });
