@@ -75,6 +75,57 @@ app.put('/qa/questions/:question_id/helpful', function(req, res) {
   })
 });
 
+app.put('/qa/answers/:answer_id/helpful', function(req, res) {
+  var {answer_id} = req.params;
+  console.log(answer_id);
+
+
+  // res.sendStatus(204);
+  db.Question.updateOne({'answers.id': answer_id}, {$inc: {'answers.$.helpful': 1}})
+  .then((results) => {
+    console.log(results);
+    res.json(results);
+  })
+  .catch((err) => {
+    console.error(err);
+    res.sendStatus(400);
+  })
+});
+
+app.put('/qa/questions/:question_id/report', function(req, res) {
+  var {question_id} = req.params;
+  console.log(question_id);
+
+
+  // res.sendStatus(204);
+  db.Question.updateOne({id: question_id}, {reported: 1})
+  .then((results) => {
+    console.log(results);
+    res.json(results);
+  })
+  .catch((err) => {
+    console.error(err);
+    res.sendStatus(400);
+  })
+});
+
+app.put('/qa/answers/:answer_id/report', function(req, res) {
+  var {answer_id} = req.params;
+  console.log(answer_id);
+
+
+  // res.sendStatus(204);
+  db.Question.updateOne({'answers.id': answer_id}, {'answers.$.reported': 0})
+  .then((results) => {
+    console.log(results);
+    res.json(results);
+  })
+  .catch((err) => {
+    console.error(err);
+    res.sendStatus(400);
+  })
+});
+
 let port = 3000;
 app.listen(port, function() {
   console.log(`now listening on port ${port}`);
