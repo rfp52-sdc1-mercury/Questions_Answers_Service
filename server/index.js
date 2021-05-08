@@ -66,6 +66,47 @@ app.post('/qa/questions', function(req, res) {
   })
 });
 
+app.post('/qa/questions/:question_id/answers', function(req, res) {
+  var {body, name, email, photos} = req.body
+  console.log(body, name, email, photos);
+  var {question_id} = req.params;
+  // console.log(question_id);
+
+  if (question_id == undefined) {
+    res.sendStatus(400);
+  }
+
+  // res.end();
+
+  db.Question.findOne({id: question_id})
+  .then((results) => {
+    // console.log(results);
+    // res.json(results.answers);
+
+    // Create our new answer
+
+    db.Counter.findOneAndUpdate({'_id': 'answer_id'}, {'$inc': {sequence_value: 1}}, {new: true})
+    .then((id) => {
+      console.log(id.sequence_value);
+
+
+
+      var ans = new db.Answer({id: id.sequence_value, body: body, answerer_name: name, answerer_email: email, question_id: question_id, date_written: new Date(), helpful: 0, reported: 0})
+
+      // console.log(results);
+      results.answers.push(ans);
+      results.save();
+      res.json(results);
+      })
+      .catch((err) => {
+        console.error(err);
+        res.sendStatus(400);
+      })
+    })
+
+  });
+
+
 app.put('/qa/questions/:question_id/helpful', function(req, res) {
   var {question_id} = req.params;
   console.log(question_id);
