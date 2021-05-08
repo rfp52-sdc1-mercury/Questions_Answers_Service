@@ -27,7 +27,7 @@ app.use(express.json());
 app.get('/qa/questions', function(req, res) {
 
   // console.log(req.query.product_id, req.query.page, req.query.count);
-  db.Question.find({product_id: req.query.product_id})
+  db.Question.findOne({product_id: req.query.product_id})
   .then((results) => {
     // console.log(results);
     res.json(results);
