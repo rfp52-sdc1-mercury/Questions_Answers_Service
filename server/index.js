@@ -39,6 +39,22 @@ app.get('/qa/questions', function(req, res) {
 
 });
 
+app.get('/qa/questions/:question_id/answers', function(req, res) {
+
+  // console.log(req.query.product_id, req.query.page, req.query.count);
+  db.Question.findOne({id: req.params.question_id})
+  .then((results) => {
+    // console.log(results);
+    var output = {question: req.params.question_id, count: req.query.count, page: req.query.page, results: results.answers}
+    res.json(output);
+  })
+  .catch((err) => {
+    console.error(err);
+    res.sendStatus(404);
+  })
+
+});
+
 app.post('/qa/questions', function(req, res) {
   var {body, name, email, product_id} = req.body
   // console.log(body, name, email, product_id);
