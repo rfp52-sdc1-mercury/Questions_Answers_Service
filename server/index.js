@@ -41,16 +41,24 @@ app.get('/qa/questions', function(req, res) {
 
 app.post('/qa/questions', function(req, res) {
   var {body, name, email, product_id} = req.body
-  console.log(body, name, email, product_id);
+  // console.log(body, name, email, product_id);
 
   if (product_id == undefined) {
     res.sendStatus(400);
   }
   // res.end();
-  db.Question.create({body: body, asker_name: name, asker_email: email, product_id: product_id, date_written: new Date(), helpful: 0, reported: false})
+
+
+  db.Counter.findOneAndUpdate({'_id': 'question_id'}, {'$inc': {sequence_value: 1}}, {new: true})
   .then((results) => {
-    console.log(results);
+  console.log(results.sequence_value);
+  //res.json(results);
+
+  db.Question.create({id: results.sequence_value, body: body, asker_name: name, asker_email: email, product_id: product_id, date_written: new Date(), helpful: 0, reported: 0})
+  .then((results) => {
+    // console.log(results);
     res.json(results);
+  })
   })
   .catch((err) => {
     console.error(err);

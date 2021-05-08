@@ -67,9 +67,17 @@ let questionSchema = mongoose.Schema({
 
 let Question = mongoose.model('Question', questionSchema, 'questions_answers_aggregated');
 
+let counterSchema = mongoose.Schema({
+  _id: String,
+  sequence_value: Number
+})
+
+let Counter = mongoose.model('Counter', counterSchema, 'counters');
+
 module.exports.Question = Question;
 module.exports.Answer = Answer;
 module.exports.Photo = Photo;
+module.exports.Counter = Counter;
 
 // let productSchema = mongoose.Schema({
 //   product_id: Number,
