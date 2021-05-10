@@ -47,7 +47,7 @@ let answerSchema = mongoose.Schema({
   answerer_name: String,
   answerer_email: String,
   helpful: Number,
-  reported: Number,
+  reported: Boolean,
   photos: [photoSchema]
 })
 
@@ -61,7 +61,7 @@ let questionSchema = mongoose.Schema({
   asker_name: String,
   asker_email: String,
   helpful: Number,
-  reported: Number,
+  reported: Boolean,
   answers: [answerSchema]
 })
 

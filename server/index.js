@@ -25,13 +25,61 @@ const dbName = 'qna';
 app.use(express.static(__dirname + '/../../Project-Catwalk-1/client/dist'));
 app.use(express.json());
 
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept'
+  );
+  next();
+});
+
+
 app.get('/qa/questions', function(req, res) {
 
   // console.log(req.query.product_id, req.query.page, req.query.count);
   db.Question.find({product_id: req.query.product_id})
   .then((results) => {
     // console.log(results);
-    res.json(results);
+    var resultsModified = results.map((question) => {
+      var answersModified = question.answers.map((answer) => {
+        var answerModified =
+        {
+          id: answer.id,
+          body: answer.body,
+          date: answer.date_written,
+          answerer_name: answer.answerer_name,
+          answerer_email: answer.answerer_email,
+          reported: answer.reported,
+          helpfulness: answer.helpful,
+          photos: answer.photos
+        }
+        // answer;
+
+        // answerModified.date = answer.date_written;
+        // answerModified.helpfulness = answer.helpful;
+
+        // console.log(answerModified.date);
+        // console.log(answerModified.helpfulness);
+
+        return answerModified;
+      });
+      console.log(answersModified);
+
+      var questionModified = {
+        question_id: question.id,
+        question_body: question.body,
+        question_date: question.date_written,
+        asker_email: question.asker_email,
+        asker_name: question.asker_name,
+        question_helpfulness: question.helpful,
+        question_reported: question.reported,
+        answers: answersModified
+      }
+      return questionModified;
+    })
+    var output = {product_id: req.query.product_id, results: resultsModified}
+    res.json(output);
   })
   .catch((err) => {
     console.error(err);
@@ -195,7 +243,7 @@ app.put('/qa/answers/:answer_id/report', function(req, res) {
   })
 });
 
-let port = 3000;
+let port = 3001;
 app.listen(port, function() {
   console.log(`now listening on port ${port}`);
 })
