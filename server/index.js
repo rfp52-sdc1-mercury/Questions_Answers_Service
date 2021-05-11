@@ -215,7 +215,7 @@ app.put('/qa/questions/:question_id/report', function(req, res) {
 
 
   // res.sendStatus(204);
-  db.Question.updateOne({id: question_id}, {reported: 1})
+  db.Question.updateOne({id: question_id}, {reported: true})
   .then((results) => {
     console.log(results);
     res.json(results);
@@ -232,7 +232,7 @@ app.put('/qa/answers/:answer_id/report', function(req, res) {
 
 
   // res.sendStatus(204);
-  db.Question.updateOne({'answers.id': answer_id}, {'answers.$.reported': 0})
+  db.Question.updateOne({'answers.id': answer_id}, {'answers.$.reported': true})
   .then((results) => {
     console.log(results);
     res.json(results);
