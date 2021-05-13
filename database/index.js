@@ -1,3 +1,4 @@
+require('dotenv').config();
 // const MongoClient = require('mongodb').MongoClient;
 // const assert = require('assert');
 
@@ -25,7 +26,14 @@
 // module.exports = client;
 
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/qna', {useNewUrlParser: true, useUnifiedTopology: true});
+// for local DBMS
+// mongoose.connect('mongodb://localhost/qna', {useNewUrlParser: true, useUnifiedTopology: true});
+
+// for deployed DBMS
+// console.log(process.env.USER, process.env.HOST, process.env.PASS)
+
+mongoose.connect(`mongodb://${process.env.USER}:${process.env.PASS}@${process.env.HOST}/qna`, {useNewUrlParser: true, useUnifiedTopology: true})
+
 mongoose.connection.on('Error connecting to MongoDB', console.error.bind(console, 'connection error'));
 mongoose.connection.once('open', function() {
   console.log('Connected to MongoDB!');
